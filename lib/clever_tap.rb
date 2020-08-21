@@ -39,7 +39,9 @@ class CleverTap
     @client ||= Client.new(config.account_id, config.passcode, &config.configure_faraday)
   end
 
-  def upload_events(events, name:, **rest)
+  def upload_events(events, name: nil, **rest)
+    raise ArgumentError 'required keyword: name' if name.nil?
+
     options = rest.merge(event_name: name, identity_field: config.identity_field)
 
     response = Uploader.new(events, options).call(client)
@@ -68,7 +70,9 @@ class CleverTap
 
   private
 
-  def normalize_response(response, records:)
+  def normalize_response(response, records: nil)
+    raise ArgumentError 'required keyword: records' if records.nil?
+
     # TODO: handle JSON::ParserError
     if response.success?
       SuccessfulResponse.new(JSON.parse(response.body))
