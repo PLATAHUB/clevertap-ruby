@@ -134,6 +134,20 @@ clevertap.upload(event)
 clevertap.upload(events) # Works as well with [CleverTap::Event]
 ```
 
+### Create a campaign
+```ruby
+client = CleverTap.new(account_id: '<your account ID>', passcode: '<your passcode>')
+
+campaign = CleverTap::Campaign.new(
+  to: { "Email" => ["john@doe.com"] },  
+  tag_group: "mytaggroup",  
+  respect_frequency_caps: false,  
+  content: { 'body' => "Smsbody" }  
+)
+
+client.create_campaign(campaign)
+```
+
 ### Send requests as *Dry Run*
 
 Passing parameter `dry_run: true` to upload methods you can test the data submitted for a validation errors.
