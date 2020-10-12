@@ -68,6 +68,10 @@ class CleverTap
       all_responses
     end
 
+    def create_campaign(campaign, type: :sms)
+      Creator.new(campaign, type: type).call(self)
+    end
+
     private
 
     def batched_upload(entity, payload, dry_run)

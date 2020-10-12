@@ -16,7 +16,7 @@ class CleverTap
 
     attr_reader :record, :type
 
-    def initialize(record, type = :sms)
+    def initialize(record, type: :sms)
       @record = record
       @type = type
     end

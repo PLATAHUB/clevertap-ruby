@@ -68,8 +68,8 @@ class CleverTap
     upload_profiles([profile], options)
   end
 
-  def create_campaign(campaign)
-    response = Creator.new(campaign).call(client)
+  def create_campaign(campaign, type: :sms)
+    response = Creator.new(campaign, type: type).call(client)
     normalize_response(response, records: [campaign])
   end
 

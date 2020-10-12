@@ -136,16 +136,142 @@ clevertap.upload(events) # Works as well with [CleverTap::Event]
 
 ### Create a campaign
 ```ruby
-client = CleverTap.new(account_id: '<your account ID>', passcode: '<your passcode>')
+client = CleverTap::Client.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE)
 
-campaign = CleverTap::Campaign.new(
-  to: { "Email" => ["john@doe.com"] },  
-  tag_group: "mytaggroup",  
-  respect_frequency_caps: false,  
-  content: { 'body' => "Smsbody" }  
+## SMS
+CleverTap::Campaign.new(
+  to: { 'Email' => ['john@doe.com'] },
+  tag_group: 'mytaggroup',
+  respect_frequency_caps: false,
+  content: { 'body' => 'Smsbody' }
 )
 
-client.create_campaign(campaign)
+# by default the campaign type is :sms
+client.create_campaign(campaign, type: :sms)
+
+## Web push
+CleverTap::Campaign.new(
+  to: {
+    'FBID' => %w[102029292929388 114342342453463],
+    'Email' =>  ['john@doe.com', 'jane@doe.com'],
+    'Identity' => ['JohnDoe'],
+    'objectId' => [
+      '_asdnkansdjknaskdjnasjkndja',
+      '-adffajjdfoaiaefiohnefwprjf'
+    ]
+  },
+  tag_group: 'my tag group',
+  campaign_id: 1_000_000_043,
+  respect_frequency_caps: false,
+  content: {
+    'title' => 'Hi!',
+    'body' => 'How are you doing today?'
+  },
+  platform_specific: {  # Optional
+    'safari' => {
+      'deep_link' => 'https://www.google.com',
+      'ttl' => 10
+    },
+    'chrome' => {
+      'image' => 'https://www.exampleImage.com',
+      'icon' => 'https://www.exampleIcon.com',
+      'deep_link' => 'http://www.example.com',
+      'ttl' => 10,
+      'require_interaction' => true,
+      'cta_title1' => 'title',
+      'cta_link1' => 'http://www.example2.com',
+      'cta_iconlink1' => 'https://www.exampleIcon2.com'
+    },
+    'firefox' => {
+      'icon' => 'https://www.exampleIcon.com',
+      'deep_link' => 'https://www.google.com',
+      'ttl' => 10
+    }
+  }
+)
+
+client.create_campaign(campaign, type: :web_push)
+
+## Push
+CleverTap::Campaign.new(
+  to: {
+    'FBID' => %w[
+      102029292929388
+      114342342453463
+    ],
+    'GPID' => [
+      '1928288389299292'
+    ],
+    'Email' => [
+      'john@doe.com',
+      'jane@doe.com'
+    ],
+    'Identity' => [
+      'JohnDoe'
+    ],
+    'objectId' => [
+      '_asdnkansdjknaskdjnasjkndja',
+      '-adffajjdfoaiaefiohnefwprjf'
+    ]
+  },
+  tag_group: 'mytaggroup',
+  respect_frequency_caps: false,
+  content: {
+    'title' => 'Welcome',
+    'body' => 'Smsbody'
+  },
+  platform_specific: { # Optional
+    'ios' => {
+      'deep_link' => 'example.com',
+      'sound_file' => 'example.caf',
+      'category' => 'notification category',
+      'badge_count' => 1,
+      'key' => 'value_ios'
+    },
+    'android' => {
+      'background_image' => 'http://example.jpg',
+      'default_sound' => true,
+      'deep_link' => 'example.com',
+      'large_icon' => 'http://example.png',
+      'key' => 'value_android'
+    }
+  }
+)
+
+client.create_campaign(campaign, type: :push)
+
+## Email
+CleverTap::Campaign.new(
+  to: {
+    'FBID' => %w[
+      102029292929388
+      114342342453463
+    ],
+    'GPID' => [
+      '1928288389299292'
+    ],
+    'Email' => [
+      'john@doe.com',
+      'jane@doe.com'
+    ],
+    'Identity' => [
+      'JohnDoe'
+    ],
+    'objectId' => [
+      '_asdnkansdjknaskdjnasjkndja',
+      '-adffajjdfoaiaefiohnefwprjf'
+    ]
+  },
+  tag_group: 'my tag group',
+  respect_frequency_caps: false,
+  content: {
+    'subject' => 'Welcome',
+    'body' => '<div>Your HTML content for the email</div>',
+    'sender_name' => 'CleverTap'
+  }
+)
+
+client.create_campaign(campaign, type: :email)
 ```
 
 ### Send requests as *Dry Run*

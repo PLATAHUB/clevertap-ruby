@@ -55,33 +55,33 @@ describe CleverTap::Creator, vcr: true do
           respect_frequency_caps: false,
           content: {
             'title' => 'Hi!',
-            'body' => 'How are you doing today?',
-            'platform_specific' => {
-              'safari' => {
-                'deep_link' => 'https://www.google.com',
-                'ttl' => 10
-              },
-              'chrome' => {
-                'image' => 'https://www.exampleImage.com',
-                'icon' => 'https://www.exampleIcon.com',
-                'deep_link' => 'http://www.example.com',
-                'ttl' => 10,
-                'require_interaction' => true,
-                'cta_title1' => 'title',
-                'cta_link1' => 'http://www.example2.com',
-                'cta_iconlink1' => 'https://www.exampleIcon2.com'
-              },
-              'firefox' => {
-                'icon' => 'https://www.exampleIcon.com',
-                'deep_link' => 'https://www.google.com',
-                'ttl' => 10
-              }
+            'body' => 'How are you doing today?'
+          },
+          platform_specific: {
+            'safari' => {
+              'deep_link' => 'https://www.google.com',
+              'ttl' => 10
+            },
+            'chrome' => {
+              'image' => 'https://www.exampleImage.com',
+              'icon' => 'https://www.exampleIcon.com',
+              'deep_link' => 'http://www.example.com',
+              'ttl' => 10,
+              'require_interaction' => true,
+              'cta_title1' => 'title',
+              'cta_link1' => 'http://www.example2.com',
+              'cta_iconlink1' => 'https://www.exampleIcon2.com'
+            },
+            'firefox' => {
+              'icon' => 'https://www.exampleIcon.com',
+              'deep_link' => 'https://www.google.com',
+              'ttl' => 10
             }
           }
         )
       end
 
-      subject { described_class.new(campaign, :web_push) }
+      subject { described_class.new(campaign, type: :web_push) }
       context 'with valid data' do
         it 'creates a new campaign' do
           result = subject.call(client)
@@ -119,34 +119,34 @@ describe CleverTap::Creator, vcr: true do
               '-adffajjdfoaiaefiohnefwprjf'
             ]
           },
-          tag_group: 'my tag group',
+          tag_group: 'mytaggroup',
           respect_frequency_caps: false,
           content: {
             'title' => 'Welcome',
-            'body' => 'Hello world!',
-            'platform_specific' => {
-              'ios' => {
-                'deep_link' => 'example.com',
-                'sound_file' => 'example.caf',
-                'category' => 'notification category',
-                'badge_count' => 1,
-                'key' => 'value_ios'
-              },
-              'android' => {
-                'background_image' => 'http://example.jpg',
-                'default_sound' => true,
-                'deep_link' => 'example.com',
-                'large_icon' => 'http://example.png',
-                'key' => 'value_android'
-              }
+            'body' => 'Smsbody'
+          },
+          platform_specific: {
+            'ios' => {
+              'deep_link' => 'example.com',
+              'sound_file' => 'example.caf',
+              'category' => 'notification category',
+              'badge_count' => 1,
+              'key' => 'value_ios'
+            },
+            'android' => {
+              'background_image' => 'http://example.jpg',
+              'default_sound' => true,
+              'deep_link' => 'example.com',
+              'large_icon' => 'http://example.png',
+              'key' => 'value_android'
             }
           }
         )
       end
 
-      subject { described_class.new(campaign, :push) }
+      subject { described_class.new(campaign, type: :push) }
 
-      xcontext 'with valid data push' do
+      context 'with valid data push' do
         it 'creates a new campaign' do
           result = subject.call(client)
           body = JSON.parse(result.body)
@@ -155,6 +155,54 @@ describe CleverTap::Creator, vcr: true do
             expect(result.success?).to be_truthy
             expect(result.status).to eq(200)
             expect(body).to include('message' => 'Added to queue for processing', 'status' => 'success')
+          end
+        end
+      end
+
+      context 'when platform_specific is invalid' do
+        let(:campaign) do
+          CleverTap::Campaign.new(
+            to: {
+              'Email' => [
+                'john@doe.com',
+                'jane@doe.com'
+              ]
+            },
+            tag_group: 'mytaggroup',
+            respect_frequency_caps: false,
+            content: {
+              'title' => 'Welcome',
+              'body' => 'Smsbody',
+              'platform_specific' => {
+                'ios' => {
+                  'deep_link' => 'example.com',
+                  'sound_file' => 'example.caf',
+                  'category' => 'notification category',
+                  'badge_count' => 1,
+                  'key' => 'value_ios'
+                },
+                'android' => {
+                  'background_image' => 'http://example.jpg',
+                  'default_sound' => true,
+                  'deep_link' => 'example.com',
+                  'large_icon' => 'http://example.png',
+                  'key' => 'value_android'
+                }
+              }
+            }
+          )
+        end
+
+        it 'is failure' do
+          result = subject.call(client)
+          body = JSON.parse(result.body)
+
+          aggregate_failures 'success response' do
+            expect(result.success?).to be_falsey
+            expect(result.status).to eq(400)
+            expect(body).to include('status' => 'fail',
+                                    'error' => 'Notification channel is required for devices having Android 8.0 or above',
+                                    'code' => 9)
           end
         end
       end
@@ -193,7 +241,7 @@ describe CleverTap::Creator, vcr: true do
         )
       end
 
-      subject { described_class.new(campaign, :email) }
+      subject { described_class.new(campaign, type: :email) }
 
       context 'with valid data email' do
         it 'creates a new campaign' do

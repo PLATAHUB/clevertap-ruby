@@ -31,7 +31,7 @@ class CleverTap
     MUTABLE_CONTENT = 'mutable-content'.freeze
     PLATFORM_SPECIFIC = 'platform_specific'.freeze
     MAX_USERS_PER_CAMPAIGN = 1000
-    
+
     def initialize(**args)
       @to = args[:to]
       @tag_group = args[:tag_group]
