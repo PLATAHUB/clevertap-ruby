@@ -59,8 +59,8 @@ RSpec.describe CleverTap::Campaign do
         }
       end
 
-      it 'should raise a InvalidIdentityType error' do
-        expect { subject }.to raise_error(CleverTap::InvalidIdentityType)
+      it 'should raise a InvalidIdentityTypeError error' do
+        expect { subject }.to raise_error(CleverTap::InvalidIdentityTypeError)
       end
     end
 
@@ -120,6 +120,24 @@ RSpec.describe CleverTap::Campaign do
 
       it 'should raise a NoContentError error' do
         expect { subject }.to raise_error(CleverTap::NoContentError)
+      end
+    end
+
+    context 'When users per campaign limit was exceeded' do
+      let(:params) do
+        {
+          to: {
+            'Email' => ['example@email.com'] * 100,
+            'FBID' => ['fbidexample'] * 901
+          },
+          tag_group: 'mytaggroup',
+          respect_frequency_caps: false,
+          content: { 'body' => 'Smsbody' }
+        }
+      end
+
+      it 'should raise a LimitExceededError error' do
+        expect { subject }.to raise_error(CleverTap::LimitExceededError)
       end
     end
   end

@@ -11,9 +11,15 @@ class CleverTap
     end
   end
 
-  class InvalidIdentityType < RuntimeError
+  class InvalidIdentityTypeError < RuntimeError
     def message
       'The identities types are not valid for Campaigns'
+    end
+  end
+
+  class LimitExceededError < RuntimeError
+    def message
+      'The max users per campaign limit was exceeded'
     end
   end
 
@@ -62,8 +68,9 @@ class CleverTap
 
     def put_to_pair
       raise NoReceiversError if @to.to_h.empty?
-      raise InvalidIdentityType unless allowed?(@to.keys)
+      raise InvalidIdentityTypeError unless allowed?(@to.keys)
       raise NoReceiversError if @to.values.all?(&:empty?)
+      raise LimitExceededError if @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
 
       { TO_STRING => @to }
     end
