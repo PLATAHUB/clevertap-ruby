@@ -150,131 +150,153 @@ campaign = CleverTap::CampaignCreator.new(
 
 # by default the campaign type is :sms
 client.create_campaign(campaign, type: :sms)
-
-## Web push
-campaign = CleverTap::CampaignCreator.new(
-  to: {
-    'FBID' => %w[102029292929388 114342342453463],
-    'Email' =>  ['john@doe.com', 'jane@doe.com'],
-    'Identity' => ['JohnDoe'],
-    'objectId' => [
-      '_asdnkansdjknaskdjnasjkndja',
-      '-adffajjdfoaiaefiohnefwprjf'
-    ]
-  },
-  tag_group: 'my tag group',
-  campaign_id: 1_000_000_043,
-  respect_frequency_caps: false,
-  content: {
-    'title' => 'Hi!',
-    'body' => 'How are you doing today?'
-  },
-  platform_specific: {  # Optional
-    'safari' => {
-      'deep_link' => 'https://apple.com',
-      'ttl' => 10
-    },
-    'chrome' => {
-      'image' => 'https://www.exampleImage.com',
-      'icon' => 'https://www.exampleIcon.com',
-      'deep_link' => ' https://google.co',
-      'ttl' => 10,
-      'require_interaction' => true,
-      'cta_title1' => 'title',
-      'cta_link1' => 'http://www.example2.com',
-      'cta_iconlink1' => 'https://www.exampleIcon2.com'
-    },
-    'firefox' => {
-      'icon' => 'https://www.exampleIcon.com',
-      'deep_link' => 'https://mozilla.org',
-      'ttl' => 10
-    }
-  }
-)
-
-client.create_campaign(campaign, type: :web_push)
-
-## Push
-campaign = CleverTap::CampaignCreator.new(
-  to: {
-    'FBID' => %w[
-      102029292929388
-      114342342453463
-    ],
-    'GPID' => [
-      '1928288389299292'
-    ],
-    'Email' => [
-      'john@doe.com',
-      'jane@doe.com'
-    ],
-    'Identity' => [
-      'JohnDoe'
-    ],
-    'objectId' => [
-      '_asdnkansdjknaskdjnasjkndja',
-      '-adffajjdfoaiaefiohnefwprjf'
-    ]
-  },
-  tag_group: 'mytaggroup',
-  respect_frequency_caps: false,
-  content: {
-    'title' => 'Welcome',
-    'body' => 'Smsbody'
-  },
-  platform_specific: { # Optional
-    'ios' => {
-      'deep_link' => 'example.com',
-      'sound_file' => 'example.caf',
-      'category' => 'notification category',
-      'badge_count' => 1,
-      'key' => 'value_ios'
-    },
-    'android' => {
-      'background_image' => 'http://example.jpg',
-      'default_sound' => true,
-      'deep_link' => 'example.com',
-      'large_icon' => 'http://example.png',
-      'key' => 'value_android'
-    }
-  }
-)
-
-client.create_campaign(campaign, type: :push)
-
-## Email
-campaign = CleverTap::CampaignCreator.new(
-  to: {
-    'FBID' => %w[
-      102029292929388
-      114342342453463
-    ],
-    'GPID' => [
-      '1928288389299292'
-    ],
-    'Email' => [
-      'john@doe.com',
-      'jane@doe.com'
-    ],
-    'Identity' => [
-      'JohnDoe'
-    ],
-    'objectId' => [
-      '_asdnkansdjknaskdjnasjkndja',
-      '-adffajjdfoaiaefiohnefwprjf'
-    ]
-  },
-  tag_group: 'my tag group',
-  respect_frequency_caps: false,
-  content: {
-    'subject' => 'Welcome',
-    'body' => '<div>Your HTML content for the email</div>',
-    'sender_name' => 'CleverTap'
-  }
-)
-
-client.create_campaign(campaign, type: :email)
 ```
+
+
+<details>
+  <summary>Web push example</summary>
+  
+  ```ruby
+  ## Web push
+  campaign = CleverTap::CampaignCreator.new(
+    to: {
+      'FBID' => %w[102029292929388 114342342453463],
+      'Email' =>  ['john@doe.com', 'jane@doe.com'],
+      'Identity' => ['JohnDoe'],
+      'objectId' => [
+        '_asdnkansdjknaskdjnasjkndja',
+        '-adffajjdfoaiaefiohnefwprjf'
+      ]
+    },
+    tag_group: 'my tag group',
+    campaign_id: 1_000_000_043,
+    respect_frequency_caps: false,
+    content: {
+      'title' => 'Hi!',
+      'body' => 'How are you doing today?'
+    },
+    platform_specific: {  # Optional
+      'safari' => {
+        'deep_link' => 'https://apple.com',
+        'ttl' => 10
+      },
+      'chrome' => {
+        'image' => 'https://www.exampleImage.com',
+        'icon' => 'https://www.exampleIcon.com',
+        'deep_link' => ' https://google.co',
+        'ttl' => 10,
+        'require_interaction' => true,
+        'cta_title1' => 'title',
+        'cta_link1' => 'http://www.example2.com',
+        'cta_iconlink1' => 'https://www.exampleIcon2.com'
+      },
+      'firefox' => {
+        'icon' => 'https://www.exampleIcon.com',
+        'deep_link' => 'https://mozilla.org',
+        'ttl' => 10
+      }
+    }
+  )
+
+  client.create_campaign(campaign, type: :web_push)
+  ```
+</details>
+
+
+<details>
+  <summary>Push example</summary>
+  
+  ```ruby
+  ## Push
+  campaign = CleverTap::CampaignCreator.new(
+    to: {
+      'FBID' => %w[
+        102029292929388
+        114342342453463
+      ],
+      'GPID' => [
+        '1928288389299292'
+      ],
+      'Email' => [
+        'john@doe.com',
+        'jane@doe.com'
+      ],
+      'Identity' => [
+        'JohnDoe'
+      ],
+      'objectId' => [
+        '_asdnkansdjknaskdjnasjkndja',
+        '-adffajjdfoaiaefiohnefwprjf'
+      ]
+    },
+    tag_group: 'mytaggroup',
+    respect_frequency_caps: false,
+    content: {
+      'title' => 'Welcome',
+      'body' => 'Smsbody'
+    },
+    platform_specific: { # Optional
+      'ios' => {
+        'deep_link' => 'example.com',
+        'sound_file' => 'example.caf',
+        'category' => 'notification category',
+        'badge_count' => 1,
+        'key' => 'value_ios'
+      },
+      'android' => {
+        'background_image' => 'http://example.jpg',
+        'default_sound' => true,
+        'deep_link' => 'example.com',
+        'large_icon' => 'http://example.png',
+        'key' => 'value_android'
+      }
+    }
+  )
+
+  client.create_campaign(campaign, type: :push)
+  ```
+</details>
+
+
+<details>
+  <summary>Email example</summary>
+  
+  ```ruby
+  ## Email
+  campaign = CleverTap::CampaignCreator.new(
+    to: {
+      'FBID' => %w[
+        102029292929388
+        114342342453463
+      ],
+      'GPID' => [
+        '1928288389299292'
+      ],
+      'Email' => [
+        'john@doe.com',
+        'jane@doe.com'
+      ],
+      'Identity' => [
+        'JohnDoe'
+      ],
+      'objectId' => [
+        '_asdnkansdjknaskdjnasjkndja',
+        '-adffajjdfoaiaefiohnefwprjf'
+      ]
+    },
+    tag_group: 'my tag group',
+    respect_frequency_caps: false,
+    content: {
+      'subject' => 'Welcome',
+      'body' => '<div>Your HTML content for the email</div>',
+      'sender_name' => 'CleverTap'
+    }
+  )
+
+  client.create_campaign(campaign, type: :email)
+  ```
+</details>
+
 
 ### Send requests as *Dry Run*
 
