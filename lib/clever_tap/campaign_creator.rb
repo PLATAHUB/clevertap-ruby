@@ -1,5 +1,5 @@
 class CleverTap
-  class Creator
+  class CampaignCreator
     HTTP_PATH = 'send/'.freeze
 
     TYPE_SMS = :sms

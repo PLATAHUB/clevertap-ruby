@@ -7,7 +7,7 @@ require 'clever_tap/entity'
 require 'clever_tap/event'
 require 'clever_tap/profile'
 require 'clever_tap/uploader'
-require 'clever_tap/creator'
+require 'clever_tap/campaign_creator'
 require 'clever_tap/response'
 require 'clever_tap/successful_response'
 require 'clever_tap/failed_response'
@@ -69,7 +69,7 @@ class CleverTap
   end
 
   def create_campaign(campaign, type: :sms)
-    response = Creator.new(campaign, type: type).call(client)
+    response = CampaignCreator.new(campaign, type: type).call(client)
     normalize_response(response, records: [campaign])
   end
 

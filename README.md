@@ -135,11 +135,13 @@ clevertap.upload(events) # Works as well with [CleverTap::Event]
 ```
 
 ### Create a campaign
+CleverTap documentation: https://developer.clevertap.com/docs/create-campaign-api
+
 ```ruby
 client = CleverTap::Client.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE)
 
 ## SMS
-CleverTap::Campaign.new(
+campaign = CleverTap::CampaignCreator.new(
   to: { 'Email' => ['john@doe.com'] },
   tag_group: 'mytaggroup',
   respect_frequency_caps: false,
@@ -150,7 +152,7 @@ CleverTap::Campaign.new(
 client.create_campaign(campaign, type: :sms)
 
 ## Web push
-CleverTap::Campaign.new(
+campaign = CleverTap::CampaignCreator.new(
   to: {
     'FBID' => %w[102029292929388 114342342453463],
     'Email' =>  ['john@doe.com', 'jane@doe.com'],
@@ -169,13 +171,13 @@ CleverTap::Campaign.new(
   },
   platform_specific: {  # Optional
     'safari' => {
-      'deep_link' => 'https://www.google.com',
+      'deep_link' => 'https://apple.com',
       'ttl' => 10
     },
     'chrome' => {
       'image' => 'https://www.exampleImage.com',
       'icon' => 'https://www.exampleIcon.com',
-      'deep_link' => 'http://www.example.com',
+      'deep_link' => ' https://google.co',
       'ttl' => 10,
       'require_interaction' => true,
       'cta_title1' => 'title',
@@ -184,7 +186,7 @@ CleverTap::Campaign.new(
     },
     'firefox' => {
       'icon' => 'https://www.exampleIcon.com',
-      'deep_link' => 'https://www.google.com',
+      'deep_link' => 'https://mozilla.org',
       'ttl' => 10
     }
   }
@@ -193,7 +195,7 @@ CleverTap::Campaign.new(
 client.create_campaign(campaign, type: :web_push)
 
 ## Push
-CleverTap::Campaign.new(
+campaign = CleverTap::CampaignCreator.new(
   to: {
     'FBID' => %w[
       102029292929388
@@ -241,7 +243,7 @@ CleverTap::Campaign.new(
 client.create_campaign(campaign, type: :push)
 
 ## Email
-CleverTap::Campaign.new(
+campaign = CleverTap::CampaignCreator.new(
   to: {
     'FBID' => %w[
       102029292929388

@@ -17,7 +17,7 @@ class CleverTap
     end
   end
 
-  class LimitExceededError < RuntimeError
+  class ReceiversLimitExceededError < RuntimeError
     def message
       'The max users per campaign limit was exceeded'
     end
@@ -66,7 +66,7 @@ class CleverTap
     end
 
     def to_h
-      to_hash
+      receivers_hash
         .merge(tag_group_hash)
         .merge(content_hash)
         .merge(provider_nick_name_hash)
@@ -79,11 +79,11 @@ class CleverTap
         .merge(platform_specific_hash)
     end
 
-    def to_hash
+    def receivers_hash
       raise NoReceiversError if @to.to_h.empty?
       raise InvalidIdentityTypeError unless allowed?(@to.keys)
       raise NoReceiversError if @to.values.all?(&:empty?)
-      raise LimitExceededError if @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
+      raise ReceiversLimitExceededError if @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
 
       { TO_STRING => @to }
     end

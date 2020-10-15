@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CleverTap::Creator, vcr: true do
+describe CleverTap::CampaignCreator, vcr: true do
   describe '#call' do
     let(:client) { CleverTap::Client.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE) }
 

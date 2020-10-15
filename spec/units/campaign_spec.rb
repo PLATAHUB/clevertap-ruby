@@ -136,8 +136,8 @@ RSpec.describe CleverTap::Campaign do
         }
       end
 
-      it 'should raise a LimitExceededError error' do
-        expect { subject }.to raise_error(CleverTap::LimitExceededError)
+      it 'should raise a ReceiversLimitExceededError error' do
+        expect { subject }.to raise_error(CleverTap::ReceiversLimitExceededError)
       end
     end
   end
