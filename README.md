@@ -141,7 +141,7 @@ CleverTap documentation: https://developer.clevertap.com/docs/create-campaign-ap
 client = CleverTap::Client.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE)
 
 ## SMS
-campaign = CleverTap::CampaignCreator.new(
+campaign = CleverTap::Campaign.new(
   to: { 'Email' => ['john@doe.com'] },
   tag_group: 'mytaggroup',
   respect_frequency_caps: false,
@@ -158,7 +158,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Web push
-  campaign = CleverTap::CampaignCreator.new(
+  campaign = CleverTap::Campaign.new(
     to: {
       'FBID' => %w[102029292929388 114342342453463],
       'Email' =>  ['john@doe.com', 'jane@doe.com'],
@@ -173,27 +173,27 @@ client.create_campaign(campaign, type: :sms)
     respect_frequency_caps: false,
     content: {
       'title' => 'Hi!',
-      'body' => 'How are you doing today?'
-    },
-    platform_specific: {  # Optional
-      'safari' => {
-        'deep_link' => 'https://apple.com',
-        'ttl' => 10
-      },
-      'chrome' => {
-        'image' => 'https://www.exampleImage.com',
-        'icon' => 'https://www.exampleIcon.com',
-        'deep_link' => ' https://google.co',
-        'ttl' => 10,
-        'require_interaction' => true,
-        'cta_title1' => 'title',
-        'cta_link1' => 'http://www.example2.com',
-        'cta_iconlink1' => 'https://www.exampleIcon2.com'
-      },
-      'firefox' => {
-        'icon' => 'https://www.exampleIcon.com',
-        'deep_link' => 'https://mozilla.org',
-        'ttl' => 10
+      'body' => 'How are you doing today?',
+      'platform_specific' => {  # Optional
+        'safari' => {
+          'deep_link' => 'https://apple.com',
+          'ttl' => 10
+        },
+        'chrome' => {
+          'image' => 'https://www.exampleImage.com',
+          'icon' => 'https://www.exampleIcon.com',
+          'deep_link' => ' https://google.co',
+          'ttl' => 10,
+          'require_interaction' => true,
+          'cta_title1' => 'title',
+          'cta_link1' => 'http://www.example2.com',
+          'cta_iconlink1' => 'https://www.exampleIcon2.com'
+        },
+        'firefox' => {
+          'icon' => 'https://www.exampleIcon.com',
+          'deep_link' => 'https://mozilla.org',
+          'ttl' => 10
+        }
       }
     }
   )
@@ -208,7 +208,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Push
-  campaign = CleverTap::CampaignCreator.new(
+  campaign = CleverTap::Campaign.new(
     to: {
       'FBID' => %w[
         102029292929388
@@ -233,22 +233,23 @@ client.create_campaign(campaign, type: :sms)
     respect_frequency_caps: false,
     content: {
       'title' => 'Welcome',
-      'body' => 'Smsbody'
-    },
-    platform_specific: { # Optional
-      'ios' => {
-        'deep_link' => 'example.com',
-        'sound_file' => 'example.caf',
-        'category' => 'notification category',
-        'badge_count' => 1,
-        'key' => 'value_ios'
-      },
-      'android' => {
-        'background_image' => 'http://example.jpg',
-        'default_sound' => true,
-        'deep_link' => 'example.com',
-        'large_icon' => 'http://example.png',
-        'key' => 'value_android'
+      'body' => 'Smsbody',
+      'platform_specific' => { # Optional
+        'ios' => {
+          'deep_link' => 'example.com',
+          'sound_file' => 'example.caf',
+          'category' => 'notification category',
+          'badge_count' => 1,
+          'key' => 'value_ios'
+        },
+        'android' => {
+          'background_image' => 'http://example.jpg',
+          'default_sound' => true,
+          'deep_link' => 'example.com',
+          'large_icon' => 'http://example.png',
+          'key' => 'value_android',
+          'wzrk_cid' => 'engagement'
+        }
       }
     }
   )
@@ -263,7 +264,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Email
-  campaign = CleverTap::CampaignCreator.new(
+  campaign = CleverTap::Campaign.new(
     to: {
       'FBID' => %w[
         102029292929388

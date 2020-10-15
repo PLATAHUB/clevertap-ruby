@@ -79,7 +79,7 @@ RSpec.describe CleverTap, vcr: true do
     end
   end
 
-  xdescribe 'creating a campaign' do
+  describe 'creating a campaign' do
     let(:campaign) do
       {
         to: { 'Email' => ['john@doe.com'] },
@@ -91,7 +91,7 @@ RSpec.describe CleverTap, vcr: true do
       response = clever_tap.create_campaign(campaign, type: :sms)
 
       aggregate_failures 'success response' do
-        expect(response.status).to eq('success')
+        expect(response.code).to eq(200)
       end
     end
   end

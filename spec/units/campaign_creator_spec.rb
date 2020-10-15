@@ -55,27 +55,27 @@ describe CleverTap::CampaignCreator, vcr: true do
           respect_frequency_caps: false,
           content: {
             'title' => 'Hi!',
-            'body' => 'How are you doing today?'
-          },
-          platform_specific: {
-            'safari' => {
-              'deep_link' => 'https://www.google.com',
-              'ttl' => 10
-            },
-            'chrome' => {
-              'image' => 'https://www.exampleImage.com',
-              'icon' => 'https://www.exampleIcon.com',
-              'deep_link' => 'http://www.example.com',
-              'ttl' => 10,
-              'require_interaction' => true,
-              'cta_title1' => 'title',
-              'cta_link1' => 'http://www.example2.com',
-              'cta_iconlink1' => 'https://www.exampleIcon2.com'
-            },
-            'firefox' => {
-              'icon' => 'https://www.exampleIcon.com',
-              'deep_link' => 'https://www.google.com',
-              'ttl' => 10
+            'body' => 'How are you doing today?',
+            'platform_specific' => { # Optional
+              'safari' => {
+                'deep_link' => 'https://apple.com',
+                'ttl' => 10
+              },
+              'chrome' => {
+                'image' => 'https://www.exampleImage.com',
+                'icon' => 'https://www.exampleIcon.com',
+                'deep_link' => ' https://google.co',
+                'ttl' => 10,
+                'require_interaction' => true,
+                'cta_title1' => 'title',
+                'cta_link1' => 'http://www.example2.com',
+                'cta_iconlink1' => 'https://www.exampleIcon2.com'
+              },
+              'firefox' => {
+                'icon' => 'https://www.exampleIcon.com',
+                'deep_link' => 'https://mozilla.org',
+                'ttl' => 10
+              }
             }
           }
         )
@@ -123,22 +123,23 @@ describe CleverTap::CampaignCreator, vcr: true do
           respect_frequency_caps: false,
           content: {
             'title' => 'Welcome',
-            'body' => 'Smsbody'
-          },
-          platform_specific: {
-            'ios' => {
-              'deep_link' => 'example.com',
-              'sound_file' => 'example.caf',
-              'category' => 'notification category',
-              'badge_count' => 1,
-              'key' => 'value_ios'
-            },
-            'android' => {
-              'background_image' => 'http://example.jpg',
-              'default_sound' => true,
-              'deep_link' => 'example.com',
-              'large_icon' => 'http://example.png',
-              'key' => 'value_android'
+            'body' => 'Smsbody',
+            'platform_specific' => { # Optional
+              'ios' => {
+                'deep_link' => 'example.com',
+                'sound_file' => 'example.caf',
+                'category' => 'notification category',
+                'badge_count' => 1,
+                'key' => 'value_ios'
+              },
+              'android' => {
+                'background_image' => 'http://example.jpg',
+                'default_sound' => true,
+                'deep_link' => 'example.com',
+                'large_icon' => 'http://example.png',
+                'key' => 'value_android',
+                'wzrk_cid' => 'engagement'
+              }
             }
           }
         )

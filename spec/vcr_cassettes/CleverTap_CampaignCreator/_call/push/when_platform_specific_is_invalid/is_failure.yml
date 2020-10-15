@@ -22,7 +22,7 @@ http_interactions:
       message: Bad Request
     headers:
       date:
-      - Mon, 12 Oct 2020 20:07:45 GMT
+      - Thu, 15 Oct 2020 22:29:58 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -34,5 +34,5 @@ http_interactions:
       string: '{ "status" : "fail" , "error" : "Notification channel is required for
         devices having Android 8.0 or above" , "code" : 9}'
     http_version:
-  recorded_at: Mon, 12 Oct 2020 20:07:45 GMT
+  recorded_at: Thu, 15 Oct 2020 22:29:58 GMT
 recorded_with: VCR 5.1.0

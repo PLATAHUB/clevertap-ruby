@@ -6,7 +6,8 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"to":{"FBID":["102029292929388","114342342453463"],"Email":["john@doe.com","jane@doe.com"],"Identity":["JohnDoe"],"objectId":["_asdnkansdjknaskdjnasjkndja","-adffajjdfoaiaefiohnefwprjf"]},"tag_group":"my
-        tag group","content":{"title":"Hi!","body":"How are you doing today?","platform_specific":{"safari":{"deep_link":"https://www.google.com","ttl":10},"chrome":{"image":"https://www.exampleImage.com","icon":"https://www.exampleIcon.com","deep_link":"http://www.example.com","ttl":10,"require_interaction":true,"cta_title1":"title","cta_link1":"http://www.example2.com","cta_iconlink1":"https://www.exampleIcon2.com"},"firefox":{"icon":"https://www.exampleIcon.com","deep_link":"https://www.google.com","ttl":10}}},"respect_frequency_caps":false}'
+        tag group","content":{"title":"Hi!","body":"How are you doing today?","platform_specific":{"safari":{"deep_link":"https://apple.com","ttl":10},"chrome":{"image":"https://www.exampleImage.com","icon":"https://www.exampleIcon.com","deep_link":"
+        https://google.co","ttl":10,"require_interaction":true,"cta_title1":"title","cta_link1":"http://www.example2.com","cta_iconlink1":"https://www.exampleIcon2.com"},"firefox":{"icon":"https://www.exampleIcon.com","deep_link":"https://mozilla.org","ttl":10}}},"respect_frequency_caps":false}'
     headers:
       Content-Type:
       - application/json
@@ -22,7 +23,7 @@ http_interactions:
       message: OK
     headers:
       date:
-      - Thu, 08 Oct 2020 15:42:32 GMT
+      - Thu, 15 Oct 2020 22:29:57 GMT
       content-type:
       - application/json;charset=utf-8
       transfer-encoding:
@@ -35,5 +36,5 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '{ "message" : "Added to queue for processing" , "status" : "success"}'
     http_version:
-  recorded_at: Thu, 08 Oct 2020 15:42:32 GMT
+  recorded_at: Thu, 15 Oct 2020 22:29:57 GMT
 recorded_with: VCR 5.1.0
