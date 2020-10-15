@@ -27,8 +27,8 @@ RSpec.describe CleverTap::Campaign do
         }
       end
 
-      it 'should raise a NoReceiversError error' do
-        expect { subject }.to raise_error(CleverTap::NoReceiversError)
+      it 'should raise a ArgumentError error' do
+        expect { subject }.to raise_error(ArgumentError)
       end
     end
 
@@ -108,8 +108,8 @@ RSpec.describe CleverTap::Campaign do
         params.delete :content
       end
 
-      it 'should raise a NoContentError error' do
-        expect { subject }.to raise_error(CleverTap::NoContentError)
+      it 'should raise a ArgumentError error' do
+        expect { subject }.to raise_error(ArgumentError)
       end
     end
 

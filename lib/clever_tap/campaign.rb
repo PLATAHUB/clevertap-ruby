@@ -39,8 +39,8 @@ class CleverTap
     PLATFORM_SPECIFIC = 'platform_specific'.freeze
     MAX_USERS_PER_CAMPAIGN = 1000
 
-    def initialize(to: nil,
-                   content: nil,
+    def initialize(to:,
+                   content:,
                    tag_group: nil,
                    campaign_id: nil,
                    provider_nick_name: nil,
@@ -95,7 +95,7 @@ class CleverTap
 
     def campaign_id_hash
       return {} unless @campaign_id
-      { CAMPAIGN_ID => @campaign_id}
+      { CAMPAIGN_ID => @campaign_id }
     end
 
     def content_hash
