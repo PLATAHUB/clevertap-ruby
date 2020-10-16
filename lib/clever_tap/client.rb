@@ -68,8 +68,8 @@ class CleverTap
       all_responses
     end
 
-    def create_campaign(campaign, type: :sms)
-      CampaignCreator.new(campaign, type: type).call(self)
+    def create_campaign(campaign)
+      CampaignCreator.new(campaign).call(self)
     end
 
     private

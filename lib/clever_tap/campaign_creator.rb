@@ -16,9 +16,9 @@ class CleverTap
 
     attr_reader :record, :type
 
-    def initialize(record, type: :sms)
+    def initialize(record)
       @record = record
-      @type = type
+      @type = campaign_type(record)
     end
 
     def call(client)
@@ -28,6 +28,19 @@ class CleverTap
     end
 
     private
+
+    def campaign_type(record)
+      case record
+      when SmsCampaign
+        TYPE_SMS
+      when WebPushCampaign
+        TYPE_WEBPUSH
+      when PushCampaign
+        TYPE_PUSH
+      when CleverTap::EmailCampaign
+        TYPE_EMAIL
+      end
+    end
 
     def parse_response(http_response)
       http_response
