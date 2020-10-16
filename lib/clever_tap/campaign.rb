@@ -23,6 +23,12 @@ class CleverTap
     end
   end
 
+  class NoChannelIdError < RuntimeError
+    def message
+      'Channel Id (wzrk_cid) must be sent'
+    end
+  end
+
   class Campaign
     ALLOWED_IDENTITIES = %w[FBID Email Identity objectId GPID ID].freeze
     TO_STRING = 'to'.freeze
@@ -62,7 +68,7 @@ class CleverTap
       @badge_id = badge_id
       @badge_icon = badge_icon
       @mutable_content = mutable_content
-      @platform_specific = platform_specific
+      @platform_specific = platform_specific || content_platform_specific
     end
 
     def to_h
@@ -72,11 +78,9 @@ class CleverTap
         .merge(provider_nick_name_hash)
         .merge(notification_sent_hash)
         .merge(respect_frequency_caps_hash)
-        .merge(wzrk_cid_hash)
         .merge(badge_id_hash)
         .merge(badge_icon_hash)
         .merge(mutable_content_hash)
-        .merge(platform_specific_hash)
     end
 
     def receivers_hash
@@ -101,6 +105,9 @@ class CleverTap
     def content_hash
       raise NoContentError if @content.to_h.empty?
       raise NoContentError if @content.to_h['body'].nil?
+
+      platform_specific = platform_specific_hash
+      @content.merge!(platform_specific) unless platform_specific.empty?
 
       { CONTENT => @content }
     end
@@ -142,7 +149,22 @@ class CleverTap
 
     def platform_specific_hash
       return {} unless @platform_specific
+
+      android = @platform_specific[:android] || @platform_specific['android']
+
+      if android
+        channel = @wzrk_cid || android[:wzrk_cid] || android['wzrk_cid']
+        raise NoChannelIdError unless channel
+
+        @platform_specific['android']['wzrk_cid'] = channel
+      end
+
       { PLATFORM_SPECIFIC => @platform_specific }
+    end
+
+    def content_platform_specific
+      @platform_specific ||= @content[:platform_specific]
+      @platform_specific ||= @content['platform_specific']
     end
 
     def allowed?(indentities)

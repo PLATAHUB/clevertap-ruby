@@ -194,17 +194,8 @@ describe CleverTap::CampaignCreator, vcr: true do
           )
         end
 
-        it 'is failure' do
-          result = subject.call(client)
-          body = JSON.parse(result.body)
-
-          aggregate_failures 'success response' do
-            expect(result.success?).to be_falsey
-            expect(result.status).to eq(400)
-            expect(body).to include('status' => 'fail',
-                                    'error' => 'Notification channel is required for devices having Android 8.0 or above',
-                                    'code' => 9)
-          end
+        it 'should raise a NoChannelIdError error' do
+          expect { subject.call(client) }.to raise_error(CleverTap::NoChannelIdError)
         end
       end
     end
