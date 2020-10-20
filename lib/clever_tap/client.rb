@@ -69,10 +69,71 @@ class CleverTap
     end
 
     def create_campaign(campaign)
-      CampaignCreator.new(campaign).call(self)
+      if campaign.receivers_limit_exceeded?
+        bulk_create_campaign(campaign)
+      else
+        CampaignCreator.new(campaign).call(self)
+      end
+    end
+
+    def bulk_create_campaign(campaign)
+      campaigns = obtain_receivers(campaign)
+      responses = []
+
+      campaigns.each do |item|
+        next if item.empty?
+        campaign.to = item
+        responses << CampaignCreator.new(campaign).call(self)
+      end
+
+      responses
     end
 
     private
+
+    def obtain_receivers(campaign)
+      campaigns = []
+      temporal_receivers = {}
+      identities = campaign.to.map { |k, v| [k, v] }
+      identity_index = 0
+      receivers_index = 0
+      slots = Campaign::MAX_USERS_PER_CAMPAIGN
+
+      while identity_index < identities.size
+        key = identities[identity_index][0]
+        receivers = identities[identity_index][1]
+        size = receivers.size
+
+        remaining_receivers = size - receivers_index
+
+        current_slots = slots - remaining_receivers
+
+        temporal_receivers[key] = [] unless temporal_receivers[key]
+
+        if current_slots <= 0
+          temporal_receivers[key] += receivers.slice(receivers_index, slots)
+
+          receivers_index = remaining_receivers + current_slots
+          slots = Campaign::MAX_USERS_PER_CAMPAIGN # 4
+
+          campaigns << temporal_receivers unless temporal_receivers.empty?
+          temporal_receivers = {}
+        else
+          temporal_receivers[key] += receivers.slice(receivers_index, remaining_receivers)
+          receivers_index += remaining_receivers
+          slots = current_slots
+        end
+
+        next unless remaining_receivers <= 1 || receivers[receivers_index].nil?
+
+        identity_index += 1
+        receivers_index = 0
+
+        campaigns << temporal_receivers if identity_index >= identities.size && !temporal_receivers.empty?
+      end
+
+      campaigns
+    end
 
     def batched_upload(entity, payload, dry_run)
       payload.each_slice(entity.upload_limit) do |group|

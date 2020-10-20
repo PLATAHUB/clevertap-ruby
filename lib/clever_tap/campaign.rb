@@ -45,6 +45,8 @@ class CleverTap
     PLATFORM_SPECIFIC = 'platform_specific'.freeze
     MAX_USERS_PER_CAMPAIGN = 1000
 
+    attr_accessor :to
+
     def initialize(to:,
                    content:,
                    tag_group: nil,
@@ -86,7 +88,7 @@ class CleverTap
       raise NoReceiversError if @to.to_h.empty?
       raise InvalidIdentityTypeError unless allowed?(@to.keys)
       raise NoReceiversError if @to.values.all?(&:empty?)
-      raise ReceiversLimitExceededError if @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
+      raise ReceiversLimitExceededError if receivers_limit_exceeded?
 
       { TO_STRING => @to }
     end
@@ -145,6 +147,10 @@ class CleverTap
     def content_platform_specific
       @platform_specific ||= @content[:platform_specific]
       @platform_specific ||= @content['platform_specific']
+    end
+
+    def receivers_limit_exceeded?
+      @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
     end
 
     def allowed?(indentities)
