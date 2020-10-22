@@ -31,14 +31,16 @@ class CleverTap
 
     def campaign_type(record)
       case record
-      when SmsCampaign
+      when CleverTap::Campaign::Sms
         TYPE_SMS
-      when WebPushCampaign
+      when CleverTap::Campaign::WebPush
         TYPE_WEBPUSH
-      when PushCampaign
+      when CleverTap::Campaign::Push
         TYPE_PUSH
-      when CleverTap::EmailCampaign
+      when CleverTap::Campaign::Email
         TYPE_EMAIL
+      else
+        TYPE_SMS
       end
     end
 

@@ -81,7 +81,7 @@ RSpec.describe CleverTap, vcr: true do
 
   describe 'creating a campaign' do
     let(:campaign) do
-      CleverTap::SmsCampaign.new(
+      CleverTap::Campaign::Sms.new(
         to: { 'Email' => ['john@doe.com'] },
         content: { 'body' => 'Smsbody' }
       )

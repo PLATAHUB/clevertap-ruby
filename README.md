@@ -141,7 +141,7 @@ CleverTap documentation: https://developer.clevertap.com/docs/create-campaign-ap
 client = CleverTap::Client.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE)
 
 ## SMS
-campaign = CleverTap::SmsCampaign.new(
+campaign = CleverTap::Campaign::Sms.new(
   to: { 'Email' => ['john@doe.com'] },
   tag_group: 'mytaggroup',
   respect_frequency_caps: false,
@@ -158,7 +158,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Web push
-  campaign = CleverTap::WebPushCampaign.new(
+  campaign = CleverTap::Campaign::WebPush.new(
     to: {
       'FBID' => %w[102029292929388 114342342453463],
       'Email' =>  ['john@doe.com', 'jane@doe.com'],
@@ -208,7 +208,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Push
-  campaign = CleverTap::PushCampaign.new(
+  campaign = CleverTap::Campaign::Push.new(
     to: {
       'FBID' => %w[
         102029292929388
@@ -264,7 +264,7 @@ client.create_campaign(campaign, type: :sms)
   
   ```ruby
   ## Email
-  campaign = CleverTap::EmailCampaign.new(
+  campaign = CleverTap::Campaign::Email.new(
     to: {
       'FBID' => %w[
         102029292929388

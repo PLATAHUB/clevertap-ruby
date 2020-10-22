@@ -1,5 +1,5 @@
 class CleverTap
-  class WebPushCampaign < Campaign
+  class Campaign::WebPush < Campaign
     def initialize(**args)
       super(**args)
     end

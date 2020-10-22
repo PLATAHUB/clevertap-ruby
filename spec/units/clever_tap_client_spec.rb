@@ -287,7 +287,7 @@ describe CleverTap::Client, vcr: true do
     context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
       context 'the number of targets is not divisible by limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1 a2 a3 a4 a5],
               'Email' => %w[b1 b2 b3],
@@ -312,7 +312,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'just an identity and it does not exeed the limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1 a2 a3]
             },
@@ -330,7 +330,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'the set of identiteis does not exeed the limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1],
               'Email' => %w[b1],
@@ -351,7 +351,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'empty targets' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[],
               'Email' => %w[],
@@ -382,7 +382,7 @@ describe CleverTap::Client, vcr: true do
     context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
       context 'the number of targets is not divisible by limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1 a2 a3 a4 a5],
               'Email' => %w[b1 b2 b3],
@@ -408,7 +408,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'just an identity and it does not exeed the limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1 a2 a3]
             },
@@ -431,7 +431,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'the set of identiteis does not exeed the limit' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[a1],
               'Email' => %w[b1],
@@ -457,7 +457,7 @@ describe CleverTap::Client, vcr: true do
 
       context 'empty targets' do
         let(:campaign) do
-          CleverTap::SmsCampaign.new(
+          CleverTap::Campaign::Sms.new(
             to: {
               'FBID' => %w[],
               'Email' => %w[],
@@ -486,7 +486,7 @@ describe CleverTap::Client, vcr: true do
 
     context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
       let(:campaign) do
-        CleverTap::SmsCampaign.new(
+        CleverTap::Campaign::Sms.new(
           to: {
             'FBID' => %w[a1 a2 a3 a4 a5],
             'Email' => %w[b1 b2 b3],
@@ -512,7 +512,7 @@ describe CleverTap::Client, vcr: true do
 
     context 'when the number of targest does not exeed the limit' do
       let(:campaign) do
-        CleverTap::SmsCampaign.new(
+        CleverTap::Campaign::Sms.new(
           to: {
             'FBID' => %w[a1],
             'Email' => %w[b1],

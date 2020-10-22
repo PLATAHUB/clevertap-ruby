@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe CleverTap::PushCampaign do
+RSpec.describe CleverTap::Campaign::Push do
   describe '#to_h' do
     subject { described_class.new(**params).to_h }
 

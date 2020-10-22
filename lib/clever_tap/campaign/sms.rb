@@ -1,5 +1,5 @@
 class CleverTap
-  class SmsCampaign < Campaign
+  class Campaign::Sms < Campaign
     def initialize(**args)
       super(**args)
     end

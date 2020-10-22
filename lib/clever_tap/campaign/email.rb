@@ -1,5 +1,5 @@
 class CleverTap
-  class EmailCampaign < Campaign
+  class Campaign::Email < Campaign
     def initialize(**args)
       super(**args)
     end

@@ -6,7 +6,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'sms' do
       let(:campaign) do
-        CleverTap::SmsCampaign.new(
+        CleverTap::Campaign::Sms.new(
           to: { 'Email' => ['john@doe.com'] },
           tag_group: 'mytaggroup',
           respect_frequency_caps: false,
@@ -32,7 +32,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'web_push' do
       let(:campaign) do
-        CleverTap::WebPushCampaign.new(
+        CleverTap::Campaign::WebPush.new(
           to: {
             'FBID' => %w[
               102029292929388
@@ -99,7 +99,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'push' do
       let(:campaign) do
-        CleverTap::PushCampaign.new(
+        CleverTap::Campaign::Push.new(
           to: {
             'FBID' => %w[
               102029292929388
@@ -163,7 +163,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
       context 'when platform_specific is invalid' do
         let(:campaign) do
-          CleverTap::PushCampaign.new(
+          CleverTap::Campaign::Push.new(
             to: {
               'Email' => [
                 'john@doe.com',
@@ -203,7 +203,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'email' do
       let(:campaign) do
-        CleverTap::EmailCampaign.new(
+        CleverTap::Campaign::Email.new(
           to: {
             'FBID' => %w[
               102029292929388
