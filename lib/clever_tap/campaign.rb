@@ -85,9 +85,8 @@ class CleverTap
     end
 
     def receivers_hash
-      raise NoReceiversError if @to.to_h.empty?
+      raise NoReceiversError if empty_receivers?
       raise InvalidIdentityTypeError unless allowed?(@to.keys)
-      raise NoReceiversError if @to.values.all?(&:empty?)
       raise ReceiversLimitExceededError if receivers_limit_exceeded?
 
       { TO_STRING => @to }
@@ -104,7 +103,7 @@ class CleverTap
     end
 
     def content_hash
-      raise NoContentError if @content.to_h.empty?
+      raise NotImplementedError
     end
 
     def provider_nick_name_hash
@@ -142,11 +141,13 @@ class CleverTap
       { MUTABLE_CONTENT => @mutable_content }
     end
 
-    def platform_specific_hash; end
-
     def content_platform_specific
       @platform_specific ||= @content[:platform_specific]
       @platform_specific ||= @content['platform_specific']
+    end
+
+    def empty_receivers?
+      @to.to_h.empty? || @to.values.all?(&:empty?)
     end
 
     def receivers_limit_exceeded?

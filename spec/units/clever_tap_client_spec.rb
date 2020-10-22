@@ -277,12 +277,12 @@ describe CleverTap::Client, vcr: true do
     end
   end
 
-  describe '#obtain_receivers' do
+  describe '#receivers_chunks' do
     before do
       stub_const('CleverTap::Campaign::MAX_USERS_PER_CAMPAIGN', 4)
     end
 
-    subject { described_class.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE).send(:obtain_receivers, campaign) }
+    subject { described_class.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE) }
 
     context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
       context 'the number of targets is not divisible by limit' do
@@ -300,13 +300,8 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should return an array of 5 campaigns' do
-          expect(subject.size).to eq 5
-          expect(subject[0]).to eq('FBID' => %w[a1 a2 a3 a4])
-          expect(subject[1]).to eq('FBID' => ['a5'], 'Email' => %w[b1 b2 b3])
-          expect(subject[2]).to eq('Identity' => %w[c1 c2 c3 c4])
-          expect(subject[3]).to eq('Identity' => ['c5'], 'objectId' => %w[d1 d2 d3])
-          expect(subject[4]).to eq('objectId' => %w[d4 d5])
+        it 'should yield 5 times' do
+          expect { |b| subject.send(:receivers_chunks, campaign, &b) }.to yield_control.exactly(5).times
         end
       end
 
@@ -322,9 +317,8 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should return an array of 1 campaigns ' do
-          expect(subject.size).to eq 1
-          expect(subject[0]).to eq('FBID' => %w[a1 a2 a3])
+        it 'should yield 1 times' do
+          expect { |b| subject.send(:receivers_chunks, campaign, &b) }.to yield_control.exactly(1).times
         end
       end
 
@@ -343,9 +337,8 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should return an array of 1 campaigns ' do
-          expect(subject.size).to eq 1
-          expect(subject[0]).to eq('FBID' => %w[a1], 'Email' => %w[b1], 'Identity' => %w[c1], 'objectId' => %w[d1])
+        it 'should yield 1 times' do
+          expect { |b| subject.send(:receivers_chunks, campaign, &b) }.to yield_control.exactly(1).times
         end
       end
 
@@ -364,20 +357,19 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should return an array of 1 campaigns ' do
-          expect(subject.size).to eq 1
-          expect(subject[0]).to eq('FBID' => [], 'Email' => [], 'Identity' => [], 'objectId' => [])
+        it 'should yield 0 times' do
+          expect { |b| subject.send(:receivers_chunks, campaign, &b) }.to yield_control.exactly(0).times
         end
       end
     end
   end
 
-  describe '#bulk_create_campaign' do
+  describe '#create_campaign' do
     before do
       stub_const('CleverTap::Campaign::MAX_USERS_PER_CAMPAIGN', 4)
     end
 
-    subject { described_class.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE).bulk_create_campaign(campaign) }
+    subject { described_class.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE).create_campaign(campaign) }
 
     context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
       context 'the number of targets is not divisible by limit' do
@@ -475,40 +467,6 @@ describe CleverTap::Client, vcr: true do
         end
       end
     end
-  end
-
-  describe '#create_campaign' do
-    before do
-      stub_const('CleverTap::Campaign::MAX_USERS_PER_CAMPAIGN', 4)
-    end
-
-    subject { described_class.new(AUTH_ACCOUNT_ID, AUTH_PASSCODE).create_campaign(campaign) }
-
-    context 'when the number of targets is greater than MAX_USERS_PER_CAMPAIGN' do
-      let(:campaign) do
-        CleverTap::Campaign::Sms.new(
-          to: {
-            'FBID' => %w[a1 a2 a3 a4 a5],
-            'Email' => %w[b1 b2 b3],
-            'Identity' => %w[c1 c2 c3 c4 c5],
-            'objectId' => %w[d1 d2 d3 d4 d5]
-          },
-          tag_group: 'mytaggroup',
-          respect_frequency_caps: false,
-          content: { 'body' => 'Smsbody' }
-        )
-      end
-
-      it 'should return an array of 5 responses' do
-        expect(subject.size).to eq 5
-        subject.each do |result|
-          body = JSON.parse(result.body)
-          expect(result.success?).to be_truthy
-          expect(result.status).to eq(200)
-          expect(body).to include('message' => 'Added to queue for processing', 'status' => 'success')
-        end
-      end
-    end
 
     context 'when the number of targest does not exeed the limit' do
       let(:campaign) do
@@ -526,10 +484,13 @@ describe CleverTap::Client, vcr: true do
       end
 
       it 'should return a single response' do
-        body = JSON.parse(subject.body)
-        expect(subject.success?).to be_truthy
-        expect(subject.status).to eq(200)
-        expect(body).to include('message' => 'Added to queue for processing', 'status' => 'success')
+        expect(subject.size).to eq 1
+        subject.each do |result|
+          body = JSON.parse(result.body)
+          expect(result.success?).to be_truthy
+          expect(result.status).to eq(200)
+          expect(body).to include('message' => 'Added to queue for processing', 'status' => 'success')
+        end
       end
     end
   end

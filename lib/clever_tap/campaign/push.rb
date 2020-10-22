@@ -41,10 +41,5 @@ class CleverTap
 
       (body.nil? || title.nil?)
     end
-
-    def content_platform_specific
-      @platform_specific ||= @content[:platform_specific]
-      @platform_specific ||= @content['platform_specific']
-    end
   end
 end
