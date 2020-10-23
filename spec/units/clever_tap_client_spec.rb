@@ -322,7 +322,7 @@ describe CleverTap::Client, vcr: true do
         end
       end
 
-      context 'the set of identiteis does not exeed the limit' do
+      context 'the set of identities does not exeed the limit' do
         let(:campaign) do
           CleverTap::Campaign::Sms.new(
             to: {
@@ -421,7 +421,7 @@ describe CleverTap::Client, vcr: true do
         end
       end
 
-      context 'the set of identiteis does not exeed the limit' do
+      context 'the set of identities does not exeed the limit' do
         let(:campaign) do
           CleverTap::Campaign::Sms.new(
             to: {
@@ -436,7 +436,7 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should return an array of 1 responses ' do
+        it 'should return an array of 1 responses' do
           expect(subject.size).to eq 1
           subject.each do |result|
             body = JSON.parse(result.body)
@@ -462,8 +462,8 @@ describe CleverTap::Client, vcr: true do
           )
         end
 
-        it 'should raise a NoReceiversError error' do
-          expect { subject }.to raise_error(CleverTap::NoReceiversError)
+        it 'should return an empty array' do
+          expect(subject.size).to eq 0
         end
       end
     end

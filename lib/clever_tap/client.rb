@@ -69,8 +69,6 @@ class CleverTap
     end
 
     def create_campaign(campaign)
-      return [CampaignCreator.new(campaign).call(self)] unless campaign.receivers_limit_exceeded?
-
       responses = []
 
       receivers_chunks(campaign) do |receivers|
