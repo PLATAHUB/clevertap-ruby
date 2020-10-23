@@ -45,6 +45,8 @@ class CleverTap
     PLATFORM_SPECIFIC = 'platform_specific'.freeze
     MAX_USERS_PER_CAMPAIGN = 1000
 
+    attr_accessor :to
+
     def initialize(to:,
                    content:,
                    tag_group: nil,
@@ -74,7 +76,6 @@ class CleverTap
     def to_h
       receivers_hash
         .merge(tag_group_hash)
-        .merge(content_hash)
         .merge(provider_nick_name_hash)
         .merge(notification_sent_hash)
         .merge(respect_frequency_caps_hash)
@@ -84,10 +85,9 @@ class CleverTap
     end
 
     def receivers_hash
-      raise NoReceiversError if @to.to_h.empty?
+      raise NoReceiversError if empty_receivers?
       raise InvalidIdentityTypeError unless allowed?(@to.keys)
-      raise NoReceiversError if @to.values.all?(&:empty?)
-      raise ReceiversLimitExceededError if @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
+      raise ReceiversLimitExceededError if receivers_limit_exceeded?
 
       { TO_STRING => @to }
     end
@@ -103,13 +103,7 @@ class CleverTap
     end
 
     def content_hash
-      raise NoContentError if @content.to_h.empty?
-      raise NoContentError if @content.to_h['body'].nil?
-
-      platform_specific = platform_specific_hash
-      @content.merge!(platform_specific) unless platform_specific.empty?
-
-      { CONTENT => @content }
+      raise NotImplementedError
     end
 
     def provider_nick_name_hash
@@ -147,24 +141,17 @@ class CleverTap
       { MUTABLE_CONTENT => @mutable_content }
     end
 
-    def platform_specific_hash
-      return {} unless @platform_specific
-
-      android = @platform_specific[:android] || @platform_specific['android']
-
-      if android
-        channel = @wzrk_cid || android[:wzrk_cid] || android['wzrk_cid']
-        raise NoChannelIdError unless channel
-
-        @platform_specific['android']['wzrk_cid'] = channel
-      end
-
-      { PLATFORM_SPECIFIC => @platform_specific }
-    end
-
     def content_platform_specific
       @platform_specific ||= @content[:platform_specific]
       @platform_specific ||= @content['platform_specific']
+    end
+
+    def empty_receivers?
+      @to.to_h.empty? || @to.values.all?(&:empty?)
+    end
+
+    def receivers_limit_exceeded?
+      @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
     end
 
     def allowed?(indentities)

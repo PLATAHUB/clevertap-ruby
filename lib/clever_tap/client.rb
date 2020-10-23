@@ -68,11 +68,30 @@ class CleverTap
       all_responses
     end
 
-    def create_campaign(campaign, type: :sms)
-      CampaignCreator.new(campaign, type: type).call(self)
+    def create_campaign(campaign)
+      responses = []
+
+      receivers_chunks(campaign) do |receivers|
+        campaign.to = receivers
+        responses << CampaignCreator.new(campaign).call(self)
+      end
+
+      responses
     end
 
     private
+
+    def receivers_chunks(campaign)
+      identity_pairs = campaign.to.flat_map { |type, list| list.map { |id| [type, id] } }
+
+      identity_pairs.each_slice(Campaign::MAX_USERS_PER_CAMPAIGN) do |slice|
+        chunked_to = slice.group_by(&:first)
+                          .map { |k, v| [k, v.map(&:last)] }
+                          .to_h
+
+        yield chunked_to if block_given?
+      end
+    end
 
     def batched_upload(entity, payload, dry_run)
       payload.each_slice(entity.upload_limit) do |group|

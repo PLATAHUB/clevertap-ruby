@@ -6,7 +6,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'sms' do
       let(:campaign) do
-        CleverTap::Campaign.new(
+        CleverTap::Campaign::Sms.new(
           to: { 'Email' => ['john@doe.com'] },
           tag_group: 'mytaggroup',
           respect_frequency_caps: false,
@@ -32,7 +32,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'web_push' do
       let(:campaign) do
-        CleverTap::Campaign.new(
+        CleverTap::Campaign::WebPush.new(
           to: {
             'FBID' => %w[
               102029292929388
@@ -81,7 +81,8 @@ describe CleverTap::CampaignCreator, vcr: true do
         )
       end
 
-      subject { described_class.new(campaign, type: :web_push) }
+      subject { described_class.new(campaign) }
+
       context 'with valid data' do
         it 'creates a new campaign' do
           result = subject.call(client)
@@ -98,7 +99,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'push' do
       let(:campaign) do
-        CleverTap::Campaign.new(
+        CleverTap::Campaign::Push.new(
           to: {
             'FBID' => %w[
               102029292929388
@@ -145,7 +146,7 @@ describe CleverTap::CampaignCreator, vcr: true do
         )
       end
 
-      subject { described_class.new(campaign, type: :push) }
+      subject { described_class.new(campaign) }
 
       context 'with valid data push' do
         it 'creates a new campaign' do
@@ -162,7 +163,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
       context 'when platform_specific is invalid' do
         let(:campaign) do
-          CleverTap::Campaign.new(
+          CleverTap::Campaign::Push.new(
             to: {
               'Email' => [
                 'john@doe.com',
@@ -202,7 +203,7 @@ describe CleverTap::CampaignCreator, vcr: true do
 
     context 'email' do
       let(:campaign) do
-        CleverTap::Campaign.new(
+        CleverTap::Campaign::Email.new(
           to: {
             'FBID' => %w[
               102029292929388
@@ -233,7 +234,7 @@ describe CleverTap::CampaignCreator, vcr: true do
         )
       end
 
-      subject { described_class.new(campaign, type: :email) }
+      subject { described_class.new(campaign) }
 
       context 'with valid data email' do
         it 'creates a new campaign' do

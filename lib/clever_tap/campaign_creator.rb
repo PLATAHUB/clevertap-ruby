@@ -14,20 +14,35 @@ class CleverTap
       TYPE_EMAIL => 'email.json'
     }.freeze
 
-    attr_reader :record, :type
+    attr_reader :campaign, :type
 
-    def initialize(record, type: :sms)
-      @record = record
-      @type = type
+    def initialize(campaign)
+      @campaign = campaign
+      @type = type_of(campaign)
     end
 
     def call(client)
       uri = HTTP_PATH + CAMPAIGNS_NOTIFICATIONS_ENDPOINTS[type]
-      response = client.post(uri, record.to_h.to_json)
+      response = client.post(uri, campaign.to_h.to_json)
       parse_response(response)
     end
 
     private
+
+    def type_of(campaign)
+      case campaign
+      when CleverTap::Campaign::Sms
+        TYPE_SMS
+      when CleverTap::Campaign::WebPush
+        TYPE_WEBPUSH
+      when CleverTap::Campaign::Push
+        TYPE_PUSH
+      when CleverTap::Campaign::Email
+        TYPE_EMAIL
+      else
+        TYPE_SMS
+      end
+    end
 
     def parse_response(http_response)
       http_response
