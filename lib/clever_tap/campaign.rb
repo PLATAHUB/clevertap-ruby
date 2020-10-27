@@ -29,6 +29,8 @@ class CleverTap
     end
   end
 
+  # @!attribute to
+  #   @return [Hash{String=>Array}] list of receivers
   class Campaign
     ALLOWED_IDENTITIES = %w[FBID Email Identity objectId GPID ID].freeze
     TO_STRING = 'to'.freeze
@@ -47,6 +49,8 @@ class CleverTap
 
     attr_accessor :to
 
+    # @param to [Hash{String=>Array}] List of receivers' identities grouped by type
+    # @param content [Hash{String=>Array] Content hash
     def initialize(to:,
                    content:,
                    tag_group: nil,
@@ -73,6 +77,7 @@ class CleverTap
       @platform_specific = platform_specific || content_platform_specific
     end
 
+    # @return [Hash]
     def to_h
       receivers_hash
         .merge(tag_group_hash)
@@ -84,6 +89,7 @@ class CleverTap
         .merge(mutable_content_hash)
     end
 
+    # @return [Hash]
     def receivers_hash
       raise NoReceiversError if empty_receivers?
       raise InvalidIdentityTypeError unless allowed?(@to.keys)
@@ -92,68 +98,91 @@ class CleverTap
       { TO_STRING => @to }
     end
 
+    # @return [Hash]
     def tag_group_hash
       return {} unless @tag_group
+
       { TAG_GROUP => @tag_group }
     end
 
+    # @return [Hash]
     def campaign_id_hash
       return {} unless @campaign_id
+
       { CAMPAIGN_ID => @campaign_id }
     end
 
+    # @return [Hash]
     def content_hash
       raise NotImplementedError
     end
 
+    # @return [Hash]
     def provider_nick_name_hash
       return {} unless @provider_nick_name
+
       { PROVIDER_NICK_NAME => @provider_nick_name }
     end
 
+    # @return [Hash]
     def notification_sent_hash
       return {} unless @notification_sent
+
       { NOTIFICATION_SENT => @notification_sent }
     end
 
+    # @return [Hash]
     def respect_frequency_caps_hash
       return {} if @respect_frequency_caps.nil?
+
       { RESPECT_FREQUENCY_CAPS => @respect_frequency_caps }
     end
 
+    # @return [Hash]
     def wzrk_cid_hash
       return {} unless @wzrk_cid
+
       { WZRK_CID => @wzrk_cid }
     end
 
+    # @return [Hash]
     def badge_id_hash
       return {} unless @badge_id
+
       { BADGE_ID => @badge_id }
     end
 
+    # @return [Hash]
     def badge_icon_hash
       return {} unless @badge_icon
+
       { BADGE_ICON => @badge_icon }
     end
 
+    # @return [Hash]
     def mutable_content_hash
       return {} if @mutable_content.nil?
+
       { MUTABLE_CONTENT => @mutable_content }
     end
 
+    # @return [Hash]
     def content_platform_specific
       @platform_specific ||= @content[:platform_specific]
       @platform_specific ||= @content['platform_specific']
     end
 
+    # @return [Boolean]
     def empty_receivers?
       @to.to_h.empty? || @to.values.all?(&:empty?)
     end
 
+    # @return [Boolean]
     def receivers_limit_exceeded?
       @to.values.map(&:size).reduce(&:+) > MAX_USERS_PER_CAMPAIGN
     end
 
+    # @return [Boolean]
     def allowed?(indentities)
       (indentities - ALLOWED_IDENTITIES).empty?
     end

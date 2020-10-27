@@ -1,4 +1,15 @@
 class CleverTap
+
+  class CampaignTypeError < RuntimeError
+    def message
+      'Unknown campaign type'
+    end
+  end
+
+  # @!attribute [r] campaign
+  #   @return [CleverTap::Campaign] Campaign to create
+  # @!attribute [r] type
+  #   @return [Symbol] Campaign type
   class CampaignCreator
     HTTP_PATH = 'send/'.freeze
 
@@ -16,11 +27,14 @@ class CleverTap
 
     attr_reader :campaign, :type
 
+    # @param campaign [CleverTap::Campaign]
+    # @return HTTP response
     def initialize(campaign)
       @campaign = campaign
       @type = type_of(campaign)
     end
 
+    # @param client [CleverTap::Client]
     def call(client)
       uri = HTTP_PATH + CAMPAIGNS_NOTIFICATIONS_ENDPOINTS[type]
       response = client.post(uri, campaign.to_h.to_json)
@@ -29,6 +43,8 @@ class CleverTap
 
     private
 
+    # @param campaign [CleverTap::Campaign]
+    # @raise [CampaignTypeError]
     def type_of(campaign)
       case campaign
       when CleverTap::Campaign::Sms
@@ -40,7 +56,7 @@ class CleverTap
       when CleverTap::Campaign::Email
         TYPE_EMAIL
       else
-        TYPE_SMS
+        raise CampaignTypeError
       end
     end
 

@@ -148,8 +148,7 @@ campaign = CleverTap::Campaign::Sms.new(
   content: { 'body' => 'Smsbody' }
 )
 
-# by default the campaign type is :sms
-client.create_campaign(campaign, type: :sms)
+client.create_campaign(campaign)
 ```
 
 
@@ -198,7 +197,7 @@ client.create_campaign(campaign, type: :sms)
     }
   )
 
-  client.create_campaign(campaign, type: :web_push)
+  client.create_campaign(campaign)
   ```
 </details>
 
@@ -254,7 +253,7 @@ client.create_campaign(campaign, type: :sms)
     }
   )
 
-  client.create_campaign(campaign, type: :push)
+  client.create_campaign(campaign)
   ```
 </details>
 
@@ -294,7 +293,7 @@ client.create_campaign(campaign, type: :sms)
     }
   )
 
-  client.create_campaign(campaign, type: :email)
+  client.create_campaign(campaign)
   ```
 </details>
 

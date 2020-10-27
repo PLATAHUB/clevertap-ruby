@@ -19,6 +19,9 @@ class CleverTap
 
     attr_accessor :account_id, :passcode, :configure, :on_success, :on_failure
 
+    # @param account_id [String]
+    # @param passcode [String]
+    # @param configure [Proc]
     def initialize(account_id = nil, passcode = nil, &configure)
       @account_id = assign_account_id(account_id)
       @passcode = assign_passcode(passcode)
@@ -68,6 +71,10 @@ class CleverTap
       all_responses
     end
 
+    # Creates a campaign in CleverTap
+    #
+    # @param campaign [CleverTap::Campaign] Campaign to create
+    # @return [Array] Array of parsed HTTP responses
     def create_campaign(campaign)
       responses = []
 
@@ -81,6 +88,10 @@ class CleverTap
 
     private
 
+    # This method splits receivers' identity list in chunks by Campaign::MAX_USERS_PER_CAMPAIGN
+    # and yields a block on every chunk.
+    #
+    # @yieldparam chunked_to [Hash] Hash with receivers' identities chunked to Campaign::MAX_USERS_PER_CAMPAIGN size
     def receivers_chunks(campaign)
       identity_pairs = campaign.to.flat_map { |type, list| list.map { |id| [type, id] } }
 
