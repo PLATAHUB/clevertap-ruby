@@ -96,9 +96,8 @@ class CleverTap
       identity_pairs = campaign.to.flat_map { |type, list| list.map { |id| [type, id] } }
 
       identity_pairs.each_slice(Campaign::MAX_USERS_PER_CAMPAIGN) do |slice|
-        chunked_to = slice.group_by(&:first)
-                          .map { |k, v| [k, v.map(&:last)] }
-                          .to_h
+        chunked_to = chunked_to = Hash[slice.group_by(&:first)
+          .map { |k, v| [k, v.map(&:last)] }]
 
         yield chunked_to if block_given?
       end

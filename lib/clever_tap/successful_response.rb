@@ -18,7 +18,7 @@ class CleverTap
     def status
       case
       when success then 'success'
-      when raw_response['processed'].positive? then 'partial'
+      when raw_response['processed'] > 0 then 'partial'
       else 'fail'
       end
     end
