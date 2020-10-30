@@ -46,7 +46,7 @@ class CleverTap
   end
 
   def upload_events(events, name: nil, **rest)
-    raise ArgumentError 'required keyword: name' if name.nil?
+    raise ArgumentError, 'required keyword: name' if name.nil?
 
     options = rest.merge(event_name: name, identity_field: config.identity_field)
 
@@ -82,7 +82,7 @@ class CleverTap
   private
 
   def normalize_response(response, records: nil)
-    raise ArgumentError 'required keyword: records' if records.nil?
+    raise ArgumentError, 'required keyword: records' if records.nil?
 
     # TODO: handle JSON::ParserError
     if response.success?

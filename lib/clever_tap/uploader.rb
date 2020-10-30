@@ -18,7 +18,7 @@ class CleverTap
     # should returns epoch time
     # profile respond to .to_h
     def initialize(records, identity_field: nil, date_field: nil, event_name: nil, dry_run: false)
-      raise ArgumentError 'required keyword: identity_field' if identity_field.nil?
+      raise ArgumentError, 'required keyword: identity_field' if identity_field.nil?
 
       @type = event_name ? TYPE_EVENT : TYPE_PROFILE
       @records = records

@@ -6,9 +6,9 @@ class CleverTap
     attr_reader :records, :message, :code
 
     def initialize(records: nil, message: nil, code: -1)
-      raise ArgumentError 'required keyword: records, message' if records.nil? && message.nil?
-      raise ArgumentError 'required keyword: records' if records.nil?
-      raise ArgumentError 'required keyword: message' if message.nil?
+      raise ArgumentError, 'required keyword: records, message' if records.nil? && message.nil?
+      raise ArgumentError, 'required keyword: records' if records.nil?
+      raise ArgumentError, 'required keyword: message' if message.nil?
 
       @records = records
       @message = message

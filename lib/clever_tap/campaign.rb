@@ -51,8 +51,8 @@ class CleverTap
 
     # @param to [Hash{String=>Array}] List of receivers' identities grouped by type
     # @param content [Hash{String=>Array] Content hash
-    def initialize(to:,
-                   content:,
+    def initialize(to: nil,
+                   content: nil,
                    tag_group: nil,
                    campaign_id: nil,
                    provider_nick_name: nil,
@@ -63,6 +63,9 @@ class CleverTap
                    badge_icon: nil,
                    mutable_content: nil,
                    platform_specific: nil)
+      raise ArgumentError, 'required keyword: to' if to.nil?
+      raise ArgumentError, 'required keyword: content' if content.nil?
+
       @to = to
       @tag_group = tag_group
       @campaign_id = campaign_id
